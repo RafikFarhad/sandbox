@@ -21,13 +21,16 @@ type Config struct {
 
 	AllowInternet bool
 
-	HostPWD string
+	CodeFile string
+
+	OutputPath string
 
 	AllowedMemory int64
 }
 
 func GetDefaultSandboxConfig() Config {
 	defaultConfig := Config{
+		ImageName:       "sandbox",
 		ContainerName:   "",
 		AutoRemove:      false,
 		Verbose:         true,
@@ -37,6 +40,7 @@ func GetDefaultSandboxConfig() Config {
 		DoNotRun:        false,
 		AllowInternet:   false,
 		AllowedMemory:   32,
+		OutputPath:      "/tmp",
 	}
 	return defaultConfig
 }

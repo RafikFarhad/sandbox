@@ -44,12 +44,17 @@ func Run(clientInstance *client.Client, sandboxConfig Config) string {
 		Mounts: []mount.Mount{
 			mount.Mount{
 				Type:   mount.TypeBind,
-				Source: sandboxConfig.HostPWD + "/container",
+				Source: sandboxConfig.OutputPath,
 				Target: "/home/sandbox/raw",
+			},
+			mount.Mount{
+				Type:   mount.TypeBind,
+				Source: sandboxConfig.CodeFile,
+				Target: "/home/sandbox/raw/code_file.c",
 			},
 		},
 		Resources: container.Resources{
-			//Memory: sandboxConfig.AllowedMemory * 1e+6,
+			Memory: sandboxConfig.AllowedMemory * 1e+6,
 			CpusetCpus: "0",
 		},
 		AutoRemove:  sandboxConfig.AutoRemove,
@@ -93,7 +98,7 @@ func Run(clientInstance *client.Client, sandboxConfig Config) string {
 	switch statusCode {
 	case -1:
 		fmt.Println("Timed out")
-		stopTimeout := time.Second * 5
+		stopTimeout := time.Second * 5 // 5 second is timeout for stopping the container
 		err := clientInstance.ContainerStop(ctx, containerBody.ID, &stopTimeout)
 		if err != nil {
 			fmt.Println("Container not stopped")
